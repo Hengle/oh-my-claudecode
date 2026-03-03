@@ -84,7 +84,7 @@ LLM output varies between runs. Recommendations:
 - Scoring logic has its own vitest tests that run without an API key:
 
 ```bash
-npx vitest run benchmarks/harsh-critic/scoring
+npx vitest run src/__tests__/benchmark-scoring
 ```
 
 ## Cost
