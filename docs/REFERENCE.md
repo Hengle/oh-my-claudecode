@@ -279,7 +279,7 @@ Always use `oh-my-claudecode:` prefix when calling via Task tool.
 | **Pre-Planning** | -                       | -                     | `analyst`           |
 | **Testing**      | -                       | `qa-tester`           | -                   |
 | **Security**     | `security-reviewer-low` | -                     | `security-reviewer` |
-| **Build**        | -                       | `build-fixer`         | -                   |
+| **Build**        | -                       | `debugger`            | -                   |
 | **TDD**          | -                       | `test-engineer`       | -                   |
 | **Code Review**  | -                       | -                     | `code-reviewer`     |
 | **Data Science** | -                       | `scientist`           | `scientist-high`    |
@@ -307,8 +307,8 @@ Always use `oh-my-claudecode:` prefix when calling via Task tool.
 | Test CLI interactively       | `qa-tester`                   | sonnet |
 | Security review              | `security-reviewer`           | opus   |
 | Quick security scan          | `security-reviewer-low`       | haiku  |
-| Fix build errors             | `build-fixer`                 | sonnet |
-| Simple build fix             | `build-fixer` (model=haiku)   | haiku  |
+| Fix build errors             | `debugger`                    | sonnet |
+| Simple build fix             | `debugger` (model=haiku)      | haiku  |
 | TDD workflow                 | `test-engineer`               | sonnet |
 | Quick test suggestions       | `test-engineer` (model=haiku) | haiku  |
 | Code review                  | `code-reviewer`               | opus   |

@@ -101,7 +101,7 @@ ls -la ~/.claude/skills/ 2>/dev/null
 - If custom files exist that do NOT match plugin names: OK - these are user custom content, do not flag them
 
 **Known plugin agent names** (check agents/ for these):
-`architect.md`, `document-specialist.md`, `explore.md`, `executor.md`, `debugger.md`, `planner.md`, `analyst.md`, `critic.md`, `verifier.md`, `test-engineer.md`, `build-fixer.md`, `designer.md`, `writer.md`, `qa-tester.md`, `scientist.md`, `security-reviewer.md`, `code-reviewer.md`, `quality-reviewer.md`, `deep-executor.md`
+`architect.md`, `document-specialist.md`, `explore.md`, `executor.md`, `debugger.md`, `planner.md`, `analyst.md`, `critic.md`, `verifier.md`, `test-engineer.md`, `designer.md`, `writer.md`, `qa-tester.md`, `scientist.md`, `security-reviewer.md`, `code-reviewer.md`, `git-master.md`, `code-simplifier.md`
 
 **Known plugin skill names** (check skills/ for these):
 `autopilot`, `ralph`, `ultrawork`, `team`, `ultrapilot`, `pipeline`, `ultraqa`, `plan`, `ralplan`, `analyze`, `build-fix`, `cancel`, `ccg`, `code-review`, `configure-notifications`, `configure-openclaw`, `deepinit`, `external-context`, `hud`, `learn-about-omc`, `learner`, `mcp-setup`, `note`, `omc-doctor`, `omc-help`, `omc-setup`, `omc-teams`, `project-session-manager`, `ralph-init`, `release`, `review`, `sciomc`, `security-review`, `skill`, `tdd`, `trace`, `writer-memory`

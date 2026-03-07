@@ -136,7 +136,7 @@ describe('delegation-enforcer', () => {
         { agent: 'designer', expectedModel: 'sonnet' },
         { agent: 'debugger', expectedModel: 'sonnet' },
         { agent: 'verifier', expectedModel: 'sonnet' },
-        { agent: 'quality-reviewer', expectedModel: 'sonnet' },
+        { agent: 'code-reviewer', expectedModel: 'opus' },
         { agent: 'test-engineer', expectedModel: 'sonnet' }
       ];
 
@@ -275,11 +275,11 @@ describe('delegation-enforcer', () => {
       expect(result.agentOrModel).toBe('code-reviewer');
     });
 
-    it('routes performance-reviewer to quality-reviewer', () => {
+    it('routes performance-reviewer to code-reviewer', () => {
       const result = resolveDelegation({ agentRole: 'performance-reviewer' });
       expect(result.provider).toBe('claude');
       expect(result.tool).toBe('Task');
-      expect(result.agentOrModel).toBe('quality-reviewer');
+      expect(result.agentOrModel).toBe('code-reviewer');
     });
 
     it('routes dependency-expert to document-specialist', () => {
@@ -289,11 +289,11 @@ describe('delegation-enforcer', () => {
       expect(result.agentOrModel).toBe('document-specialist');
     });
 
-    it('routes quality-strategist to quality-reviewer', () => {
+    it('routes quality-strategist to code-reviewer', () => {
       const result = resolveDelegation({ agentRole: 'quality-strategist' });
       expect(result.provider).toBe('claude');
       expect(result.tool).toBe('Task');
-      expect(result.agentOrModel).toBe('quality-reviewer');
+      expect(result.agentOrModel).toBe('code-reviewer');
     });
 
     it('routes vision to document-specialist', () => {

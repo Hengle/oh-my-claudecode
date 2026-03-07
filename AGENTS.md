@@ -110,17 +110,16 @@ Build/Analysis Lane:
 
 Review Lane:
 - `/prompts:style-reviewer`: Formatting, naming, idioms, lint conventions
-- `/prompts:quality-reviewer`: Logic defects, maintainability, anti-patterns
+- `/prompts:code-reviewer`: Comprehensive review — logic defects, maintainability, anti-patterns, style, performance
 - `/prompts:api-reviewer`: API contracts, versioning, backward compatibility
 - `/prompts:security-reviewer`: Vulnerabilities, trust boundaries, authn/authz
 - `/prompts:performance-reviewer`: Hotspots, complexity, memory/latency optimization
-- `/prompts:code-reviewer`: Comprehensive review across all concerns
 
 Domain Specialists:
 - `/prompts:dependency-expert`: External SDK/API/package evaluation
 - `/prompts:test-engineer`: Test strategy, coverage, flaky-test hardening
 - `/prompts:quality-strategist`: Quality strategy, release readiness, risk assessment
-- `/prompts:build-fixer`: Build/toolchain/type failures
+- `/prompts:debugger`: Build/toolchain/type failures, root-cause analysis
 - `/prompts:designer`: UX/UI architecture, interaction design
 - `/prompts:writer`: Docs, migration notes, user guidance
 - `/prompts:qa-tester`: Interactive CLI/service runtime validation
@@ -196,7 +195,7 @@ Agent Shortcuts:
 - `analyze` -> debugger: Investigation and root-cause analysis
 - `deepsearch` -> explore: Thorough codebase search
 - `tdd` -> test-engineer: Test-driven development workflow
-- `build-fix` -> build-fixer: Build error resolution
+- `build-fix` -> debugger: Build error resolution
 - `code-review` -> code-reviewer: Comprehensive code review
 - `security-review` -> security-reviewer: Security audit
 - `frontend-ui-ux` -> designer: UI component and styling work
@@ -216,13 +215,13 @@ Utilities:
 Common agent workflows for typical scenarios:
 
 Feature Development:
-  analyst -> planner -> executor -> test-engineer -> quality-reviewer -> verifier
+  analyst -> planner -> executor -> test-engineer -> code-reviewer -> verifier
 
 Bug Investigation:
   explore + debugger + executor + test-engineer + verifier
 
 Code Review:
-  style-reviewer + quality-reviewer + api-reviewer + security-reviewer
+  style-reviewer + code-reviewer + api-reviewer + security-reviewer
 
 Product Discovery:
   product-manager + ux-researcher + product-analyst + designer
