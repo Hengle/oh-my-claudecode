@@ -43,12 +43,9 @@ export const DEFAULT_CONFIG: PluginConfig = {
     debugger: { model: DEFAULT_TIER_MODELS.MEDIUM },
     executor: { model: DEFAULT_TIER_MODELS.MEDIUM },
     verifier: { model: DEFAULT_TIER_MODELS.MEDIUM },
-    qualityReviewer: { model: DEFAULT_TIER_MODELS.MEDIUM },
     securityReviewer: { model: DEFAULT_TIER_MODELS.MEDIUM },
     codeReviewer: { model: DEFAULT_TIER_MODELS.HIGH },
-    deepExecutor: { model: DEFAULT_TIER_MODELS.HIGH },
     testEngineer: { model: DEFAULT_TIER_MODELS.MEDIUM },
-    buildFixer: { model: DEFAULT_TIER_MODELS.MEDIUM },
     designer: { model: DEFAULT_TIER_MODELS.MEDIUM },
     writer: { model: DEFAULT_TIER_MODELS.LOW },
     qaTester: { model: DEFAULT_TIER_MODELS.MEDIUM },
@@ -499,10 +496,6 @@ export function generateConfigSchema(): object {
             type: 'object',
             properties: { model: { type: 'string' } }
           },
-          qualityReviewer: {
-            type: 'object',
-            properties: { model: { type: 'string' } }
-          },
           securityReviewer: {
             type: 'object',
             properties: { model: { type: 'string' } }
@@ -511,15 +504,7 @@ export function generateConfigSchema(): object {
             type: 'object',
             properties: { model: { type: 'string' } }
           },
-          deepExecutor: {
-            type: 'object',
-            properties: { model: { type: 'string' } }
-          },
           testEngineer: {
-            type: 'object',
-            properties: { model: { type: 'string' } }
-          },
-          buildFixer: {
             type: 'object',
             properties: { model: { type: 'string' } }
           },
