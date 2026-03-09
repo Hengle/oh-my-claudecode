@@ -33,6 +33,7 @@ import {
   getPrdCompletionStatus,
   getRalphContext,
   readVerificationState,
+  startVerification,
   recordArchitectFeedback,
   getArchitectVerificationPrompt,
   getArchitectRejectionContinuationPrompt,
@@ -502,20 +503,6 @@ async function checkRalphLoop(
     }
   }
 
-  // Check for PRD-based completion (all stories have passes: true)
-  const prdStatus = getPrdCompletionStatus(workingDir);
-  if (prdStatus.hasPrd && prdStatus.allComplete) {
-    // All PRD stories complete - allow completion
-    clearRalphState(workingDir, sessionId);
-    clearVerificationState(workingDir, sessionId);
-    deactivateUltrawork(workingDir, sessionId);
-    return {
-      shouldBlock: false,
-      message: `[RALPH LOOP COMPLETE - PRD] All ${prdStatus.status?.total || 0} stories are complete! Great work!`,
-      mode: 'none'
-    };
-  }
-
   // Check for existing verification state (architect verification in progress)
   const verificationState = readVerificationState(workingDir, sessionId);
 
@@ -529,9 +516,14 @@ async function checkRalphLoop(
         clearVerificationState(workingDir, sessionId);
         clearRalphState(workingDir, sessionId);
         deactivateUltrawork(workingDir, sessionId);
+        const criticLabel = verificationState.critic_mode === 'codex'
+          ? 'Codex critic'
+          : verificationState.critic_mode === 'critic'
+            ? 'Critic'
+            : 'Architect';
         return {
           shouldBlock: false,
-          message: `[RALPH LOOP VERIFIED COMPLETE] Architect verified task completion after ${state.iteration} iteration(s). Excellent work!`,
+          message: `[RALPH LOOP VERIFIED COMPLETE] ${criticLabel} verified task completion after ${state.iteration} iteration(s). Excellent work!`,
           mode: 'none'
         };
       }
@@ -558,7 +550,7 @@ async function checkRalphLoop(
       }
     }
 
-    // Verification still pending - remind to spawn architect
+    // Verification still pending - remind to run the selected reviewer
     // Get current story for story-aware verification
     const prdInfo = getPrdCompletionStatus(workingDir);
     const currentStory = prdInfo.nextStory ?? undefined;
@@ -566,6 +558,29 @@ async function checkRalphLoop(
     return {
       shouldBlock: true,
       message: verificationPrompt,
+      mode: 'ralph',
+      metadata: {
+        iteration: state.iteration,
+        maxIterations: state.max_iterations
+      }
+    };
+  }
+
+  // Check for PRD-based completion (all stories have passes: true).
+  // Enter a verification phase instead of clearing Ralph immediately.
+  const prdStatus = getPrdCompletionStatus(workingDir);
+  if (prdStatus.hasPrd && prdStatus.allComplete) {
+    const startedVerification = startVerification(
+      workingDir,
+      `All ${prdStatus.status?.total || 0} PRD stories are marked passes: true.`,
+      state.prompt,
+      state.critic_mode,
+      sessionId
+    );
+
+    return {
+      shouldBlock: true,
+      message: getArchitectVerificationPrompt(startedVerification),
       mode: 'ralph',
       metadata: {
         iteration: state.iteration,
@@ -609,7 +624,7 @@ CRITICAL INSTRUCTIONS:
 1. Review your progress and the original task
 ${prdInstruction}
 3. Continue from where you left off
-4. When FULLY complete (after Architect verification), run \`/oh-my-claudecode:cancel\` to cleanly exit and clean up state files. If cancel fails, retry with \`/oh-my-claudecode:cancel --force\`.
+4. When FULLY complete (after ${state.critic_mode === 'codex' ? 'Codex critic' : state.critic_mode === 'critic' ? 'Critic' : 'Architect'} verification), run \`/oh-my-claudecode:cancel\` to cleanly exit and clean up state files. If cancel fails, retry with \`/oh-my-claudecode:cancel --force\`.
 5. Do NOT stop until the task is truly done
 
 ${newState.prompt ? `Original task: ${newState.prompt}` : ''}

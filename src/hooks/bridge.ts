@@ -527,11 +527,13 @@ async function processKeywordDetector(input: HookInput): Promise<HookOutput> {
     switch (keywordType) {
       case "ralph": {
         // Lazy-load ralph module
-        const { createRalphLoopHook, findPrdPath: findPrd, initPrd: initPrdFn, initProgress: initProgressFn, detectNoPrdFlag: detectNoPrd, stripNoPrdFlag: stripNoPrd } = await import("./ralph/index.js");
+        const { createRalphLoopHook, findPrdPath: findPrd, initPrd: initPrdFn, initProgress: initProgressFn, detectNoPrdFlag: detectNoPrd, stripNoPrdFlag: stripNoPrd, detectCriticModeFlag, stripCriticModeFlag } = await import("./ralph/index.js");
 
         // Handle --no-prd flag
         const noPrd = detectNoPrd(promptText);
-        const cleanPrompt = noPrd ? stripNoPrd(promptText) : promptText;
+        const criticMode = detectCriticModeFlag(promptText) ?? undefined;
+        const promptWithoutCriticFlag = stripCriticModeFlag(promptText);
+        const cleanPrompt = noPrd ? stripNoPrd(promptWithoutCriticFlag) : promptWithoutCriticFlag;
 
         // Auto-generate scaffold PRD if none exists and --no-prd not set
         const existingPrd = findPrd(directory);
@@ -551,7 +553,7 @@ async function processKeywordDetector(input: HookInput): Promise<HookOutput> {
 
         // Activate ralph state which also auto-activates ultrawork
         const hook = createRalphLoopHook(directory);
-        hook.startLoop(sessionId, cleanPrompt);
+        hook.startLoop(sessionId, cleanPrompt, criticMode ? { criticMode } : undefined);
 
         messages.push(RALPH_MESSAGE);
         break;
@@ -1390,7 +1392,7 @@ async function processPostToolUse(input: HookInput): Promise<HookOutput> {
   if (toolName === "skill") {
     const skillName = getInvokedSkillName(input.toolInput);
     if (skillName === "ralph") {
-      const { createRalphLoopHook, findPrdPath: findPrd, initPrd: initPrdFn, initProgress: initProgressFn, detectNoPrdFlag: detectNoPrd, stripNoPrdFlag: stripNoPrd } = await import("./ralph/index.js");
+      const { createRalphLoopHook, findPrdPath: findPrd, initPrd: initPrdFn, initProgress: initProgressFn, detectNoPrdFlag: detectNoPrd, stripNoPrdFlag: stripNoPrd, detectCriticModeFlag, stripCriticModeFlag } = await import("./ralph/index.js");
       const rawPrompt =
         typeof input.prompt === "string" && input.prompt.trim().length > 0
           ? input.prompt
@@ -1398,7 +1400,9 @@ async function processPostToolUse(input: HookInput): Promise<HookOutput> {
 
       // Handle --no-prd flag
       const noPrd = detectNoPrd(rawPrompt);
-      const cleanPrompt = noPrd ? stripNoPrd(rawPrompt) : rawPrompt;
+      const criticMode = detectCriticModeFlag(rawPrompt) ?? undefined;
+      const promptWithoutCriticFlag = stripCriticModeFlag(rawPrompt);
+      const cleanPrompt = noPrd ? stripNoPrd(promptWithoutCriticFlag) : promptWithoutCriticFlag;
 
       // Auto-generate scaffold PRD if none exists and --no-prd not set
       const existingPrd = findPrd(directory);
@@ -1417,7 +1421,7 @@ async function processPostToolUse(input: HookInput): Promise<HookOutput> {
       }
 
       const hook = createRalphLoopHook(directory);
-      hook.startLoop(input.sessionId, cleanPrompt);
+      hook.startLoop(input.sessionId, cleanPrompt, criticMode ? { criticMode } : undefined);
     }
 
     // Clear skill-active state on skill completion to prevent false-blocking.
