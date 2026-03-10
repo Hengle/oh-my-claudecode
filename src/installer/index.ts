@@ -254,7 +254,7 @@ const OMC_HOOK_FILENAMES = new Set([
  *
  * Recognition strategy (any match is sufficient):
  * 1. Command path contains "omc" as a path/word segment (e.g. `omc-hook.mjs`, `/omc/`)
- * 2. Command path contains "oh-my-openagent"
+ * 2. Command path contains "oh-my-openagent" or legacy "oh-my-claudecode"
  * 3. Command references a known OMC hook filename inside .claude/hooks/
  *
  * @param command - The hook command string
@@ -265,7 +265,7 @@ export function isOmcHook(command: string): boolean {
   // Match "omc" as a path segment or word boundary
   // Matches: /omc/, /omc-, omc/, -omc, _omc, omc_
   const omcPattern = /(?:^|[\/\\_-])omc(?:$|[\/\\_-])/;
-  const fullNamePattern = /oh-my-openagent/;
+  const fullNamePattern = /oh-my-(?:openagent|claudecode)/;
   if (omcPattern.test(lowerCommand) || fullNamePattern.test(lowerCommand)) {
     return true;
   }
