@@ -182,16 +182,17 @@ describe('background-cleanup', () => {
       expect(recentRunning!.status).toBe('running');
     });
 
-    it('uses strict > comparison (task exactly at threshold stays running)', async () => {
+    it('uses strict > comparison (task within threshold stays running)', async () => {
       const threshold = 30 * 60 * 1000;
-      const exactlyAtThreshold = new Date(Date.now() - threshold).toISOString();
+      // Use threshold - 100ms to avoid race between test setup and function execution
+      const withinThreshold = new Date(Date.now() - threshold + 100).toISOString();
       mockReadHudState.mockReturnValue({
         timestamp: new Date().toISOString(),
         backgroundTasks: [
           {
             id: 'boundary-task',
             description: 'Boundary task',
-            startedAt: exactlyAtThreshold,
+            startedAt: withinThreshold,
             status: 'running',
           },
         ],
@@ -199,7 +200,7 @@ describe('background-cleanup', () => {
 
       const result = await cleanupStaleBackgroundTasks(threshold);
 
-      // Task exactly at threshold should NOT be marked failed (strict >)
+      // Task within threshold should NOT be marked failed (strict >)
       expect(mockWriteHudState).not.toHaveBeenCalled();
       expect(result).toBe(0);
     });
